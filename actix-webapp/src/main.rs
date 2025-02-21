@@ -169,13 +169,13 @@ async fn hello() -> impl Responder {
 
     println!("aRes {:?} ", result);
 
-    // let tm_lcl;
-    let join_handle = tokio::spawn(async {
-        let tm = get_date_time_from_edge_db().await;
-        tm
-    })
-    .await
-    .expect("Tokio spawn failed");
+    // // let tm_lcl;
+    // let join_handle = tokio::spawn(async {
+    //     let tm = get_date_time_from_edge_db().await;
+    //     tm
+    // })
+    // .await
+    // .expect("Tokio spawn failed");
 
     println!("tm_lcl: {}", join_handle);
 
@@ -187,8 +187,8 @@ async fn hello() -> impl Responder {
 
     let date_time = DateTime {
         // now: now_utc.to_string(),
-        now: format!("mysql(1): {} && edgedb(1): {}", result, join_handle),
-        api: "actix-web: from mysql & edgedb".to_string(),
+        now: format!("mysql(1): {}", result /* , join_handle */),
+        api: "actix-web: from mysql".to_string(),
     };
 
     return date_time;
