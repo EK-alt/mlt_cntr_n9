@@ -204,7 +204,7 @@ async fn main() -> std::io::Result<()> {
             .allow_any_header();
         App::new()
             .route("/hello", web::get().to(hello)) // Route for /hello
-            .route("/", web::get().to(hello)) // Route for / (root path) - optional
+            .route("/actix-webapp", web::get().to(hello)) // Route for / (root path) - optional
             .wrap(cors)
     })
     .bind(("0.0.0.0", 9093))? // Bind to all interfaces (0.0.0.0) and port 9090
