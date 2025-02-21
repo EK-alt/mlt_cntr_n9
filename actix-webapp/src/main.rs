@@ -187,7 +187,7 @@ async fn hello() -> impl Responder {
 
     let date_time = DateTime {
         // now: now_utc.to_string(),
-        now: format!("mysql(1): {}", result /* , join_handle */),
+        now: format!("mysql(): {}", result /* , join_handle */),
         api: "actix-web: from mysql".to_string(),
     };
 
