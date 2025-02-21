@@ -1,0 +1,11 @@
+{
+    "name": "Actix Container",
+    "dockerComposeFile": [
+        "../../docker-compose-dev.yaml"
+    ],
+    "service": "actix-webapp-n3",
+    "shutdownAction": "none",
+    "workspaceFolder": "/workspace/actix-webapp",
+    // "postStartCommand": "cargo run"
+    // "postStartCommand": "/bin/server"
+}

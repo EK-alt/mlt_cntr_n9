@@ -1,0 +1,84 @@
+services:
+  # ts-fontend-prod-n1:
+  #   labels:
+  #     shipyard.primary-route: true
+  #     shipyard.route: '/'
+  #   image: ts-frontend-prod-img-n1
+  #   build:
+  #     context: ./ts-frontend
+  #     dockerfile: Dockerfile.5
+  #   init: true
+  #   networks:
+  #     - app_network
+  #   ports:
+  #     - 81:8181
+  #   restart: unless-stopped
+
+  actix-webapp-n3:
+    labels:
+      # shipyard.route: '/actix-webapp'
+      # shipyard.route.rewrite: true
+      shipyard.primary-route: true
+      shipyard.route: '/'
+    image: actix-webapp-img-n1
+    build:
+      context: ./actix-webapp
+      dockerfile: Dockerfile
+    init: true
+    depends_on:
+      - mysqldb
+    environment:
+      - DATABASE_URL=mysql://homestead:secret@mysqldb:3307/homestead
+    networks:
+      - app_network
+    ports:
+      - 9093:9093
+    restart: unless-stopped
+
+  mysqldb:
+    # container_name: mysqldb
+    restart: always
+    ports:
+      - 33071:3307
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # - ./mysql-config.cnf:/etc/mysql/conf.d/mysql-config.cnf
+      # - .:/workspace:cached
+    environment:
+      - MYSQL_DATABASE=homestead
+      - MYSQL_USER=homestead
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
+    image: mysql:latest
+    command: --bind-address=0.0.0.0 --port=3307
+    networks:
+      - app_network
+
+  edgedb_rust:
+    image: edgedb/edgedb
+    ports:
+      - "5657:5656"
+    environment:
+      EDGEDB_PASSWORD: edgedb
+      EDGEDB_USER: edgedb
+      EDGEDB_DATABASE: edgedb
+      # EDGEDB_PORT: 5656
+      EDGEDB_HOST: localhost # Important: This refers to the host *inside* the container
+      EDGEDB_SERVER_TLS_CERT_MODE: generate_self_signed
+      EDGEDB_CLIENT_TLS_SECURITY: insecure # Use with extreme caution in development only
+      EDGEDB_SERVER_SECURITY: insecure_dev_mode
+      # EDGEDB_INSTANCE: edgedb_inst_n2
+    command: --bind-address=0.0.0.0 --port=5656
+    volumes:
+      # For persistent data (optional, but highly recommended)
+      - edgedb_rust_data:/var/lib/edgedb/data
+    networks:
+      - app_network
+
+networks:
+  app_network:
+
+
+volumes:
+  mysql_data:
+  edgedb_rust_data: # Named volume for EdgeDB data

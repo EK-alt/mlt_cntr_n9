@@ -1,0 +1,2 @@
+EDGEDB_PORT=5656  # Important
+EDGEDB_USER=edged

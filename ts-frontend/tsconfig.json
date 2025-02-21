@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        // "module": "commonjs",
+        // "target": "ES5",
+        "target": "ES2022",
+        "module": "ESNext",
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        // "baseUrl": ".",
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+        "strictNullChecks": true,
+        "noImplicitAny": false,
+        "typeRoots": [
+            "./node_modules/@types/"
+        ],
+    },
+    "exclude": [
+        "node_modules",
+        "temp-draft",
+        "src/components/LCS/1/src/app-s/app-V2.ts"
+    ],
+    // "include": [
+    //     ""
+    // ],
+    "paths": [
+        "src/**/*"
+    ]
+}

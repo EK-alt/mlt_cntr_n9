@@ -1,0 +1,121 @@
+networks:
+  app_network_n1:
+services:
+  # python-api:
+  #   image: mcr.microsoft.com/devcontainers/python:1-3.12-bookworm
+  #   volumes:
+  #     # Mount the root folder that contains .git
+  #     - .:/workspace:cached
+  #   command: sleep infinity
+  # ...
+
+  actix-webapp-n3:
+    container_name: actix-webapp-cntr-${TRY_VERSION}
+    image: actix-webapp-img-${TRY_VERSION}
+    build:
+      context: ./actix-webapp
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - type: bind
+        source: ./actix-webapp/src
+        target: /app/src
+      # Mount the root folder that contains .git
+      - .:/workspace:cached
+      # image: rust:1.84.1-bullseye    
+    command: sleep infinity # network_mode: service:mysqldb
+    networks:
+      - app_network_n1
+    depends_on:
+      - mysqldb
+      - edgedb_rust
+    environment:
+      - DATABASE_URL=mysql://homestead:secret@mysqldb:3308/homestead
+    # - EDGEDB_HOST=edgedb # Add this line
+    # - EDGEDB_PORT=5656 # Add this line
+    # links:
+    #   - python-api
+    # ...
+    ports:
+      - 9094:9093
+
+  ts-frontend-simple-n1:
+    container_name: ts-frontend-simple-${TRY_VERSION}
+    image: ts-frontend-simple-img-${TRY_VERSION}
+    build:
+      context: ./ts-frontend
+      dockerfile: Dockerfile.3
+    volumes:
+      # Locates source from within ts_frontend into the targeted /usr/src/app/
+      - type: bind
+        source: ./ts-frontend/
+        target: /usr/src/app/
+      - .:/workspace:cached
+      # Avoids bringing node modules into the container
+      - type: volume
+        target: /usr/src/app/node_modules
+      # No need because above all sources from withing ts-frontend was already targeted into /usr/src/app/
+      # using just for in case
+      - type: bind
+        source: ./ts-frontend/webpack.devserver.conf.js
+        target: /usr/src/app/webpack.devserver.conf.js
+    # network_mode: service:mysqldb
+    restart: unless-stopped
+  ts-frontend-prod:
+    container_name: ts-frontend-prod-${TRY_VERSION}
+    image: ts-frontend-prod-img-${TRY_VERSION}
+    build:
+      context: ./ts-frontend
+      dockerfile: Dockerfile.5
+    init: true
+    networks:
+      - app_network_n1
+    ports:
+      - 81:8181
+    restart: unless-stopped
+
+  mysqldb:
+    container_name: mysqldb-cntr-${TRY_VERSION}
+    # networks:
+    #   - n1-network
+    restart: always
+    ports:
+      - 33072:3308
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # - ./mysql-config.cnf:/etc/mysql/conf.d/mysql-config.cnf
+      - .:/workspace:cached
+    environment:
+      - MYSQL_DATABASE=homestead
+      - MYSQL_USER=homestead
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
+    image: mysql:latest
+    command: --bind-address=0.0.0.0 --port=3308
+    networks:
+      - app_network_n1
+
+  edgedb_rust:
+    container_name: edgedb-cntr-${TRY_VERSION}
+    image: edgedb/edgedb
+    ports:
+      - "5658:5656"
+    environment:
+      EDGEDB_PASSWORD: edgedb
+      EDGEDB_USER: edgedb
+      EDGEDB_DATABASE: edgedb
+      # EDGEDB_PORT: 5656
+      EDGEDB_HOST: localhost # Important: This refers to the host *inside* the container
+      EDGEDB_SERVER_TLS_CERT_MODE: generate_self_signed
+      EDGEDB_CLIENT_TLS_SECURITY: insecure # Use with extreme caution in development only
+      EDGEDB_INSTANCE: edgedb_inst_n2
+    command: --bind-address=0.0.0.0 --port=5656
+    volumes:
+      # For persistent data (optional, but highly recommended)
+      - edgedb_rust_data:/var/lib/edgedb/data
+    networks:
+      - app_network_n1
+
+volumes:
+  mysql_data:
+  edgedb_rust_data: # Named volume for EdgeDB data

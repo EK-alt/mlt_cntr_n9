@@ -1,0 +1,41 @@
+[package]
+name = "actix-webapp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# actix-web = "4.9.0"
+# actix-service = "2.0.2"
+# libloading = "0.8.6"
+# serde_json = "1.0.139"
+# serde = { version = "1.0.218", features = ["derive"] }
+# chrono = "0.4.39"
+actix-cors = "0.7.0"
+# mysql = "26.0.0"
+
+actix-web = "4.9.0"
+# actix-service = "2.0.2"
+# libloading = "0.8.6"
+serde_json = "1.0.138"
+serde = { version = "1.0.217", features = ["derive"] }
+# chrono = "0.4.39"
+mysql = "26.0.0"
+
+# miette = { version = "7.5.0", features = ["fancy"] }
+# gel-tokio = { version = "0.9.0", features = ["miette-errors"] }
+tokio = { version = "1.43.0", features = ["full"] }
+# anyhow = "1.0.96"
+
+# actix-web = "4.9.0"
+# actix-service = "2.0.2"
+# libloading = "0.8.6"
+# serde_json = "1.0.138"
+# serde = { version = "1.0.217", features = ["derive"] }
+# chrono = "0.4.39"
+# actix-cors = "0.7.0"
+# mysql = "26.0.0"
+# miette = { version = "5.3.0", features = ["fancy"] }
+gel-tokio = { version = "0.6.0", features = ["miette-errors"] }
+# tokio = { version = "1.43.0", features = ["full"] }
+# anyhow = "1.0.95"
+# gel-tokio = "0.9.0"

@@ -1,0 +1,86 @@
+name: image-ci
+
+on:
+  push:
+    branches:
+      - 'github-action'
+    tags:
+      - 'v*'
+jobs:
+  build-tag-push:
+  # Runs on an Ubuntu-based GitHub Actions runner (ubuntu-latest).
+    runs-on: ubuntu-latest
+    steps:
+        # Checks out (clones) your repository into the runner using
+        # This step allows the runner to access your repository's files.
+      - name: Checkout_Mine
+        uses: actions/checkout@v3
+
+        # ✅ Generates image tags and labels dynamically based on the repository, branch, tag, commit SHA, and date.
+        # ✅ Helps in automating the tagging process (e.g., latest, v1.0, 20240219-sha123abc).
+        # ✅ Allows these metadata values to be reused in later steps, such as building and pushing the Docker image.
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ek480/ts-frontend-simple-n7
+          
+          # Always tags the image as latest (e.g., ek480/try-frontend-simple:latest).
+          # Useful for setting a default tag when pulling the image.
+          #type=raw,value=latest
+
+          # If triggered by a push to a branch, it uses the branch name as a tag.
+          # Example: If you push to github-action, the image tag will be ek480/try-frontend-simple:github-action.
+          #type=ref,event=branch
+
+          # If triggered by a pull request, it tags the image with the PR reference.
+          # Example: ek480/try-frontend-simple:pr-42.
+          #type=ref,event=pr
+
+          # If your push is tagged with a version (v1.2.3), it uses that as a tag.
+          # Example: ek480/try-frontend-simple:1.2.3.
+          #type=semver,pattern={{version}}
+
+          # If your push is tagged with semantic versioning, it also generates major.minor tags.
+          # Example: v1.2.3 creates:
+              # ek480/try-frontend-simple:1.2
+              # ek480/try-frontend-simple:1
+          #type=semver,pattern={{major}}.{{minor}}
+
+          # Generates a tag with the current date and the commit SHA.
+          # Example: ek480/try-frontend-simple:20250219-abcdef1234.
+          # Useful for tracking builds uniquely.
+          #type=raw,value={{date 'YYYYMMDD'}}-{{github.sha}}
+
+          tags: |
+            type=raw,value=latest
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value={{date 'YYYYMMDD'}}-{{github.sha}}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          file: ./ts-frontend/Dockerfile.3
+          context: ./ts-frontend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}   
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ek480/ts-frontend-simple-n7:latest'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL'     

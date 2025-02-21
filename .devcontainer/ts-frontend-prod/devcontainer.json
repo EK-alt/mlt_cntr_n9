@@ -1,0 +1,10 @@
+{
+    "name": "Ts-Frontend Prod",
+    "dockerComposeFile": [
+        "../../docker-compose-dev.yaml"
+    ],
+    "service": "ts-frontend-prod",
+    "shutdownAction": "none",
+    "workspaceFolder": "/workspace/ts-frontend-prod",
+    "postStartCommand": "npm run build"
+}
