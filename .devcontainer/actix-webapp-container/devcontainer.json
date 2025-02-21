@@ -7,5 +7,5 @@
     "shutdownAction": "none",
     "workspaceFolder": "/workspace/actix-webapp",
     // "postStartCommand": "cargo run"
-    // "postStartCommand": "/bin/server"
+    "postStartCommand": "/bin/server"
 }

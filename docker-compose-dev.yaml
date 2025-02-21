@@ -37,7 +37,7 @@ services:
     #   - python-api
     # ...
     ports:
-      - 9094:9093
+      - 9093:9093
 
   ts-frontend-simple-n1:
     container_name: ts-frontend-simple-${TRY_VERSION}
