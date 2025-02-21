@@ -1,4 +1,20 @@
 services:
+  ts-frontend-simple-n1:
+    container_name: ts-frontend-simple
+    image: ts-frontend-simple-img
+    build:
+      context: ./ts-frontend
+      dockerfile: Dockerfile.3
+    volumes:
+      - type: bind
+        source: ./ts-frontend/webpack.devserver.conf.js
+        target: /usr/src/app/webpack.devserver.conf.js
+    networks:
+      - app_network_n1
+    # network_mode: service:mysqldb
+    ports:
+      - 8027:8027
+
   ts-fontend-prod:
     labels:
       shipyard.primary-route: true

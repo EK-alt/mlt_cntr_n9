@@ -59,6 +59,8 @@ services:
       - type: bind
         source: ./ts-frontend/webpack.devserver.conf.js
         target: /usr/src/app/webpack.devserver.conf.js
+    networks:
+      - app_network_n1
     # network_mode: service:mysqldb
     restart: unless-stopped
   ts-frontend-prod:
