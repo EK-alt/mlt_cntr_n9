@@ -5,13 +5,13 @@ services:
     build:
       context: ./ts-frontend
       dockerfile: Dockerfile.3
+    init: true
     volumes:
       - type: bind
         source: ./ts-frontend/webpack.devserver.conf.js
         target: /usr/src/app/webpack.devserver.conf.js
     networks:
       - app_network_n1
-    # network_mode: service:mysqldb
     ports:
       - 8027:8027
 
