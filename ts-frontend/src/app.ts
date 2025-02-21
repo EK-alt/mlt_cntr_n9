@@ -9,8 +9,8 @@ export default class App {
         const props = {
             api: ''
         }
-
-        const url = 'http://localhost:9093/actix-webapp/';
+        // http://localhost:9093
+        const url = '/actix-webapp/';
         const { isLoading, error, data, isFetching } = await this.useQuery(url);
 
         return data
