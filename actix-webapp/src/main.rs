@@ -177,7 +177,7 @@ async fn hello() -> impl Responder {
     // .await
     // .expect("Tokio spawn failed");
 
-    println!("tm_lcl: {}", join_handle);
+    // println!("tm_lcl: {}", join_handle);
 
     let result = result[0].clone();
     // format!(
