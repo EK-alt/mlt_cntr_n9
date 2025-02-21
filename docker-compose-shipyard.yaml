@@ -32,7 +32,7 @@ services:
 
   actix-webapp-n3:
     labels:
-      shipyard.route: '/actix-webapp'
+      shipyard.route: '/actix-webapp/'
       shipyard.route.rewrite: true
       # shipyard.primary-route: true
       # shipyard.route: '/'
