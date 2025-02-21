@@ -18,6 +18,7 @@ services:
     labels:
       shipyard.route: '/actix-webapp/'
       shipyard.route.rewrite: true
+      shipyard.route.port: 9093
       # shipyard.primary-route: true
       # shipyard.route: '/'
     image: actix-webapp-img-n1
