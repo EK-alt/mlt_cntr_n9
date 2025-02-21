@@ -10,7 +10,7 @@ export default class App {
             api: ''
         }
         // http://localhost:9093
-        const url = 'http://localhost:9093/actix-webapp/';
+        const url = 'http://actix-webapp-n3:9093/actix-webapp/';
         const { isLoading, error, data, isFetching } = await this.useQuery(url);
 
         return data
