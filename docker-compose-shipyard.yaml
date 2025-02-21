@@ -1,25 +1,25 @@
 services:
-  # ts-fontend-prod-n1:
-  #   labels:
-  #     shipyard.primary-route: true
-  #     shipyard.route: '/'
-  #   image: ts-frontend-prod-img-n1
-  #   build:
-  #     context: ./ts-frontend
-  #     dockerfile: Dockerfile.5
-  #   init: true
-  #   networks:
-  #     - app_network
-  #   ports:
-  #     - 81:8181
-  #   restart: unless-stopped
+  ts-fontend-prod:
+    labels:
+      shipyard.primary-route: true
+      shipyard.route: '/'
+    image: ts-frontend-prod-img-n1
+    build:
+      context: ./ts-frontend
+      dockerfile: Dockerfile.5
+    init: true
+    networks:
+      - app_network
+    ports:
+      - 81:8181
+    restart: unless-stopped
 
   actix-webapp-n3:
     labels:
-      # shipyard.route: '/actix-webapp'
-      # shipyard.route.rewrite: true
-      shipyard.primary-route: true
       shipyard.route: '/'
+      shipyard.route.rewrite: true
+      # shipyard.primary-route: true
+      # shipyard.route: '/'
     image: actix-webapp-img-n1
     build:
       context: ./actix-webapp
@@ -32,7 +32,7 @@ services:
     networks:
       - app_network
     ports:
-      - 9093:9093
+      - 9094:9093
     restart: unless-stopped
 
   mysqldb:
